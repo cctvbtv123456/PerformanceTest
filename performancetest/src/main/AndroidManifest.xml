@@ -3,12 +3,15 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.lomoment.performancetest">
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
             android:allowBackup="true"
             android:icon="@drawable/ic_launcher_round"
             android:label="@string/app_name"
             android:roundIcon="@drawable/ic_launcher_round"
             android:supportsRtl="true"
+            android:name=".App"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 

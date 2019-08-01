@@ -14,9 +14,10 @@ class PageIntent(var targetClass: Class<out BaseFloatPage>?) {
         const val MODE_SINGLE_INSTANCE = 1
     }
 
-    lateinit var bundle: Bundle
+    var bundle: Bundle? = null
 
-    lateinit var tag: String
+    var tag: String? = null
+
 
     var mode = MODE_NORMAL
 

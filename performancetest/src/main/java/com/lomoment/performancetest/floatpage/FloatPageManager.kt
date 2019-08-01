@@ -2,6 +2,7 @@ package com.lomoment.performancetest.floatpage
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.pdf.PdfDocument
 import android.view.WindowManager
 import com.lomoment.performancetest.base.BaseFloatPage
 import java.util.ArrayList
@@ -40,26 +41,93 @@ class FloatPageManager private constructor(){
             return
         }
 
+        val target = pageIntent.targetClass
         if (pageIntent.mode == PageIntent.MODE_SINGLE_INSTANCE) {
             for (mPage in mPages) {
-                if (pageIntent.targetClass.isInstance(mPage)) {
+                if (target?.isInstance(mPage)!!) {
                     return
                 }
             }
         }
 
-        val page = pageIntent.targetClass.newInstance() as BaseFloatPage
+        val page = target?.newInstance() as BaseFloatPage
         page.mBundle = pageIntent.bundle
         page.mTag = pageIntent.tag
 
         mPages.add(page)
 
         page.performCreate(mContext)
-
-
+        windowManager?.addView(page.mRootView, page.mLayoutParams)
+        for (mListener in mListeners) {
+            mListener.onPageAdd(page)
+        }
     }
 
+    fun remove(tag: String) {
+        if (tag.isBlank()) {
+            return
+        }
+        for (mPage in mPages) {
+            if (tag == mPage.mTag) {
+                windowManager?.removeView(mPage.mRootView)
+                mPage.onDestroy()
+                mPages.remove(mPage)
+                return
+            }
+        }
+    }
 
+    fun remove(page: BaseFloatPage) {
+        windowManager?.removeView(page.mRootView)
+        page.onDestroy()
+        mPages.remove(page)
+    }
+
+    fun removeAll() {
+        val it = mPages.iterator()
+        while (it.hasNext()) {
+            val page = it.next()
+            windowManager?.removeView(page.mRootView)
+            page.onDestroy()
+            it.remove()
+        }
+    }
+
+    fun removeAll(pageClass: Class<out BaseFloatPage>) {
+        val iterator = mPages.iterator()
+        while (iterator.hasNext()) {
+            val baseFloatPage = iterator.next()
+            if (pageClass.isInstance(baseFloatPage)) {
+                windowManager?.removeView(baseFloatPage.mRootView)
+                baseFloatPage.onDestroy()
+                iterator.remove()
+            }
+        }
+    }
+
+    fun getFloatPage(tag: String): BaseFloatPage ?{
+        if (tag.isBlank()) {
+            return null
+        }
+        for (mPage in mPages) {
+            if (tag == mPage.mTag) {
+                return mPage
+            }
+        }
+        return null
+    }
+
+    fun notifyBackground() {
+        for (mPage in mPages) {
+            mPage.onEnterBackground()
+        }
+    }
+
+    fun notifyForeground() {
+        for (mPage in mPages) {
+            mPage.onEnterForeground()
+        }
+    }
 
     fun addListener(listener: FloatPageManagerListener) {
         mListeners.add(listener)
@@ -69,8 +137,10 @@ class FloatPageManager private constructor(){
         mListeners.remove(listener)
     }
 
-    fun remove(baseFloatPage: BaseFloatPage) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun finishAll() {
+        for (mPage in mPages) {
+            mPage.finish()
+        }
     }
 
     interface FloatPageManagerListener{

@@ -19,16 +19,15 @@ abstract class BaseFloatPage {
 
     private val TAG = "BaseFloatPage"
 
-    lateinit var mTag: String
-    lateinit var mBundle: Bundle
+    var mTag: String? = null
+    var mBundle: Bundle? = null
+
     private lateinit var mHandler: Handler
-    private lateinit var mRootView: View
-    private lateinit var mLayoutParams: WindowManager.LayoutParams
+    lateinit var mRootView: View
+    lateinit var mLayoutParams: WindowManager.LayoutParams
 
 
     fun performCreate(mContext: Context) {
-
-
         mHandler = Handler(Looper.myLooper())
         onCreate(mContext)
         mRootView = object : FrameLayout(mContext) {
@@ -61,42 +60,42 @@ abstract class BaseFloatPage {
 
     }
 
-    fun onLayoutParamsCreated(mLayoutParams: WindowManager.LayoutParams) {
+    open fun onLayoutParamsCreated(mLayoutParams: WindowManager.LayoutParams) {
 
     }
 
-    fun onViewCreated(mRootView: View) {
+    open fun onViewCreated(mRootView: View) {
 
     }
 
     abstract fun onCreateView(mContext: Context, viewGroup: ViewGroup): View
 
-    fun onCreate(mContext: Context) {
+    open fun onCreate(mContext: Context) {
 
     }
 
-    fun onDestroy() {
+    open fun onDestroy() {
 
     }
 
-    fun onBackPress(): Boolean {
+    open fun onBackPress(): Boolean {
         return false
     }
 
 
-    fun getContext(): Context {
+    open fun getContext(): Context {
         return mRootView.context
     }
 
-    fun getResources(): Resources {
+    open fun getResources(): Resources {
         return getContext().resources
     }
 
-    fun getString(@StringRes resId:Int): String {
+    open fun getString(@StringRes resId: Int): String {
         return getContext().getString(resId)
     }
 
-    fun isShow(): Boolean {
+    open fun isShow(): Boolean {
         return mRootView.isShown
     }
 
@@ -104,15 +103,15 @@ abstract class BaseFloatPage {
         return mRootView.findViewById(id)
     }
 
-    fun post(r :Runnable) {
+    open fun post(r: Runnable) {
         mHandler.post(r)
     }
 
-    fun postDelayed(r: Runnable, delayMillis: Long) {
+    open fun postDelayed(r: Runnable, delayMillis: Long) {
         mHandler.postDelayed(r, delayMillis)
     }
 
-    fun runAfterRenderFinish(r: Runnable) {
+    open fun runAfterRenderFinish(r: Runnable) {
         Looper.myQueue().addIdleHandler(object : MessageQueue.IdleHandler {
             override fun queueIdle(): Boolean {
                 r.run()
@@ -122,16 +121,16 @@ abstract class BaseFloatPage {
         })
     }
 
-    fun finish() {
+    open fun finish() {
         FloatPageManager.mInstance.remove(this)
     }
 
-    fun onEnterBackground() {
-
+    open fun onEnterBackground() {
+        mRootView.visibility = View.GONE
     }
 
-    fun onEnterForeground() {
-
+    open fun onEnterForeground() {
+        mRootView.visibility = View.VISIBLE
     }
 
 

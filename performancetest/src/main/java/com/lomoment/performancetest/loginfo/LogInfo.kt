@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.content.Context
 import com.lomoment.performancetest.IKit
 import com.lomoment.performancetest.R
+import com.lomoment.performancetest.floatpage.FloatPageManager
+import com.lomoment.performancetest.floatpage.PageIntent
 import com.lomoment.performancetest.utils.LogInfoConfig
 
 
@@ -33,8 +35,16 @@ class LogInfo :IKit{
         val builder = AlertDialog.Builder(context)
             .setTitle("日志信息")
             .setMessage(msg)
-            .setPositiveButton("确定") { _, _ ->
+            .setPositiveButton("确定") { dialog, _ ->
+                if (logInfoOpen) {
+                    FloatPageManager.mInstance.removeAll(LogInfoFloatPage::class.java)
+                } else {
+                    val pageIntent = PageIntent(LogInfoFloatPage::class.java)
+                    pageIntent.mode = PageIntent.MODE_SINGLE_INSTANCE
+                    FloatPageManager.mInstance.add(pageIntent)
+                }
                 LogInfoConfig.setLogInfoOpen(context, !logInfoOpen)
+                dialog.dismiss()
             }
             .setNegativeButton("取消") { dialog, _ ->
                 dialog.dismiss()
