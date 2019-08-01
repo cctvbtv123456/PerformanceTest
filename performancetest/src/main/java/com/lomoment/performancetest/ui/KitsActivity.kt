@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.OrientationHelper
 import com.lomoment.performancetest.R
 import com.lomoment.performancetest.base.BaseActivity
+import com.lomoment.performancetest.loginfo.LogInfo
 import com.lomoment.performancetest.sysinfo.SysInfo
 import kotlinx.android.synthetic.main.activity_performance.*
 
@@ -18,7 +19,7 @@ class KitsActivity : BaseActivity() {
 
     private fun initAdapter() {
 
-        val list = arrayListOf(SysInfo())
+        val list = arrayListOf(SysInfo(),LogInfo())
         val kitAdapter = KitAdapter(list, this)
         val gridLayoutManager = GridLayoutManager(this, 4, OrientationHelper.VERTICAL, false)
         rv_kit.layoutManager = gridLayoutManager

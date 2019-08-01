@@ -6,8 +6,12 @@ package com.lomoment.performancetest
  * @Description
  */
 object Keys {
-    val FRAGMENT_INDEX: String = "fragment_index"
+    const val FRAGMENT_INDEX: String = "fragment_index"
 
-    val FRAGMENT_SYS_INFO: Int = 1
+    const val FRAGMENT_SYS_INFO: Int = 1
+
+
+    /*------------SharedPrefsKey---------------*/
+    const val LOG_INFO_OPEN: String = "log_info_open"
 
 }
